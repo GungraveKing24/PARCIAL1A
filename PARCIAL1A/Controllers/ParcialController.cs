@@ -353,7 +353,7 @@ namespace PARCIAL1A.Controllers
 
             PostAct.Id = PostMOD.Id;
             PostAct.Titulo = PostMOD.Titulo;
-            PostAct.Contenido = PostMOD.Contenido;
+            PostAct.contenido = PostMOD.contenido;
             PostAct.FechaPublicacion = PostMOD.FechaPublicacion;
             PostAct.AutorId = PostMOD.AutorId;
 
@@ -395,5 +395,31 @@ namespace PARCIAL1A.Controllers
             }
             return Ok(listado);
         }
+
+        [HttpGet]
+        [Route("FindPostbyAutor/{nomauto}")]
+        public IActionResult GetPostbyLibro(string nomauto)
+        {
+            var listadoPostLibro = (from p in _parcialContext.Posts
+                                    join a in _parcialContext.Autores
+                                          on p.AutorId equals a.Id
+                                    where a.Nombre == nomauto
+                                    select new
+                                    {
+                                        p.Id,
+                                        p.Titulo,
+                                        p.contenido,
+                                        p.FechaPublicacion,
+                                        Nombre_Autor = a.Nombre
+                                    }).OrderBy(resultado => resultado.FechaPublicacion)
+                                    .ThenByDescending(resultado => resultado.FechaPublicacion).Take(20).ToList();
+            if (listadoPostLibro.Count == 0)
+            {
+                return NotFound();
+            }
+
+            return Ok(listadoPostLibro);
+        }
+
     }
 }
