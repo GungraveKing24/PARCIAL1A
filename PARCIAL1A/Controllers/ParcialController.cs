@@ -174,7 +174,7 @@ namespace PARCIAL1A.Controllers
         }
 
         [HttpDelete]
-        [Route("eliminarAutorLibro/{id}")]
+        [Route("eliminarAutorLibro/id")]
         public IActionResult EliminarAutorLibro(int idautor, int idlibro)
         {
             AutorLibro? AutorLibro = (from e in _parcialContext.AutorLibro
@@ -364,6 +364,7 @@ namespace PARCIAL1A.Controllers
             return NoContent();
         }
 
+        //metodos adicionales
         /// <summary>
         /// Buscar Libro por
         /// </summary>
@@ -371,7 +372,7 @@ namespace PARCIAL1A.Controllers
         /// <returns></returns>
 
         [HttpGet]
-        [Route("FindFiltro/{Filtro}")]
+        [Route("BuscarPorAutorSuLibro/{Filtro}")]
 
         public IActionResult GetPorfiltro(string Filtro)
         {
@@ -419,6 +420,36 @@ namespace PARCIAL1A.Controllers
             }
 
             return Ok(listadoPostLibro);
+        }
+
+        /// <summary>
+        /// Todos los posts por libro
+        /// </summary>
+        /// <param name="Filtro"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("EncontrarPostsPorLibro/{Filtro}")]
+        public IActionResult GetPostsPorfiltro(string Filtro)
+        {
+            var listado = (from L in _parcialContext.Libros
+                           join AL in _parcialContext.AutorLibro
+                           on L.Id equals AL.LibroId
+                           join A in _parcialContext.Autores
+                           on AL.AutorId equals A.Id
+                           join P in _parcialContext.Posts
+                           on A.Id equals P.AutorId
+                           where L.Titulo == Filtro
+                           select new
+                           {
+                               P
+                           }).ToList();
+
+
+            if (listado == null)
+            {
+                return NotFound();
+            }
+            return Ok(listado);
         }
 
     }
