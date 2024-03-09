@@ -84,6 +84,25 @@ namespace PARCIAL1A.Controllers
             }
         }
 
+        [HttpDelete]
+        [Route("eliminarAutor/{id}")]
+        public IActionResult EliminarAutor(int id)
+        {
+            Autores? Autor = (from e in _parcialContext.Autores
+                              where e.Id == id
+                              select e).FirstOrDefault();
+            if (Autor == null)
+            {
+                return NotFound();
+            }
+
+            _parcialContext.Autores.Attach(Autor);
+            _parcialContext.Autores.Remove(Autor);
+            _parcialContext.SaveChanges();
+
+            return Ok(Autor);
+        }
+
 
 
 
@@ -113,6 +132,7 @@ namespace PARCIAL1A.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         /// 
+        /// 
 
         [HttpPut]
         [Route("UPDATEAutorLibro{id}")]
@@ -135,6 +155,41 @@ namespace PARCIAL1A.Controllers
             _parcialContext.SaveChanges();
 
             return NoContent();
+        }
+
+        [HttpPost]
+        [Route("AddAutorLibro")]
+        public IActionResult GuardarAutorLibro([FromBody] AutorLibro AutorLibro)
+        {
+            try
+            {
+                _parcialContext.AutorLibro.Add(AutorLibro);
+                _parcialContext.SaveChanges();
+                return Ok(AutorLibro);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpDelete]
+        [Route("eliminarAutorLibro/{id}")]
+        public IActionResult EliminarAutorLibro(int idautor, int idlibro)
+        {
+            AutorLibro? AutorLibro = (from e in _parcialContext.AutorLibro
+                                      where e.AutorId == idautor && e.LibroId == idlibro
+                                      select e).FirstOrDefault();
+            if (AutorLibro == null)
+            {
+                return NotFound();
+            }
+
+            _parcialContext.AutorLibro.Attach(AutorLibro);
+            _parcialContext.AutorLibro.Remove(AutorLibro);
+            _parcialContext.SaveChanges();
+
+            return Ok(AutorLibro);
         }
 
 
@@ -190,6 +245,41 @@ namespace PARCIAL1A.Controllers
             return NoContent();
         }
 
+        [HttpPost]
+        [Route("AddLibros")]
+        public IActionResult GuardarLibro([FromBody] Libros Libro)
+        {
+            try
+            {
+                _parcialContext.Libros.Add(Libro);
+                _parcialContext.SaveChanges();
+                return Ok(Libro);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
+        [HttpDelete]
+        [Route("eliminarLibro/{id}")]
+        public IActionResult EliminarLibro(int id)
+        {
+            Libros? Libro = (from e in _parcialContext.Libros
+                             where e.Id == id
+                             select e).FirstOrDefault();
+            if (Libro == null)
+            {
+                return NotFound();
+            }
+
+            _parcialContext.Libros.Attach(Libro);
+            _parcialContext.Libros.Remove(Libro);
+            _parcialContext.SaveChanges();
+
+            return Ok(Libro);
+        }
 
 
         //Metodos para Posts
@@ -212,7 +302,67 @@ namespace PARCIAL1A.Controllers
 
             return Ok(listadoPosts);
         }
-        
+
+        [HttpPost]
+        [Route("AddPosts")]
+        public IActionResult GuardarPost([FromBody] Posts Post)
+        {
+            try
+            {
+                _parcialContext.Posts.Add(Post);
+                _parcialContext.SaveChanges();
+                return Ok(Post);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpDelete]
+        [Route("eliminarPost/{id}")]
+        public IActionResult EliminarPost(int id)
+        {
+            Posts? Post = (from e in _parcialContext.Posts
+                           where e.Id == id
+                           select e).FirstOrDefault();
+            if (Post == null)
+            {
+                return NotFound();
+            }
+
+            _parcialContext.Posts.Attach(Post);
+            _parcialContext.Posts.Remove(Post);
+            _parcialContext.SaveChanges();
+
+            return Ok(Post);
+        }
+
+        [HttpPut]
+        [Route("UPDATEPost{id}")]
+        public IActionResult PutPost(int id, [FromBody] Posts PostMOD)
+        {
+            Posts? PostAct = (from p in _parcialContext.Posts
+                                   where p.Id == id
+                                   select p).FirstOrDefault();
+
+            if (PostAct == null)
+            {
+                return NotFound();
+            }
+
+            PostAct.Id = PostMOD.Id;
+            PostAct.Titulo = PostMOD.Titulo;
+            PostAct.contenido = PostMOD.contenido;
+            PostAct.FechaPublicacion = PostMOD.FechaPublicacion;
+            PostAct.AutorId = PostMOD.AutorId;
+
+
+            _parcialContext.Entry(PostAct).State = EntityState.Modified;
+            _parcialContext.SaveChanges();
+
+            return NoContent();
+        }
 
     }
 }
