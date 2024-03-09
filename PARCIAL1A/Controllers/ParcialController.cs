@@ -353,7 +353,7 @@ namespace PARCIAL1A.Controllers
 
             PostAct.Id = PostMOD.Id;
             PostAct.Titulo = PostMOD.Titulo;
-            PostAct.contenido = PostMOD.contenido;
+            PostAct.Contenido = PostMOD.Contenido;
             PostAct.FechaPublicacion = PostMOD.FechaPublicacion;
             PostAct.AutorId = PostMOD.AutorId;
 
@@ -362,6 +362,38 @@ namespace PARCIAL1A.Controllers
             _parcialContext.SaveChanges();
 
             return NoContent();
+        }
+
+        /// <summary>
+        /// Buscar Libro por
+        /// </summary>
+        /// <param name="Filtro"></param>
+        /// <returns></returns>
+
+        [HttpGet]
+        [Route("FindFiltro/{Filtro}")]
+
+        public IActionResult GetPorfiltro(string Filtro)
+        {
+            var listado = (from a in _parcialContext.Autores
+                           join AL in _parcialContext.AutorLibro
+                           on a.Id equals AL.AutorId
+                           join L in _parcialContext.Libros
+                           on AL.LibroId equals L.Id
+                           where a.Nombre == Filtro
+                           select new
+                           {
+                               a,
+                               AL,
+                               L
+                           }).ToList();
+
+
+            if (listado == null)
+            {
+                return NotFound();
+            }
+            return Ok(listado);
         }
     }
 }
