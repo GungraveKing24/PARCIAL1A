@@ -68,6 +68,22 @@ namespace PARCIAL1A.Controllers
             return NoContent();
         }
 
+        [HttpPost]
+        [Route("AddAutor")]
+        public IActionResult GuardarAutores([FromBody] Autores Autor)
+        {
+            try
+            {
+                _parcialContext.Autores.Add(Autor);
+                _parcialContext.SaveChanges();
+                return Ok(Autor);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
 
 
 
