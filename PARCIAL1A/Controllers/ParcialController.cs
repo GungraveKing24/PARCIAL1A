@@ -412,8 +412,7 @@ namespace PARCIAL1A.Controllers
                                         p.contenido,
                                         p.FechaPublicacion,
                                         Nombre_Autor = a.Nombre
-                                    }).OrderBy(resultado => resultado.FechaPublicacion)
-                                    .ThenByDescending(resultado => resultado.FechaPublicacion).Take(20).ToList();
+                                    }).OrderByDescending(resultado => resultado.FechaPublicacion).Take(20).ToList();
             if (listadoPostLibro.Count == 0)
             {
                 return NotFound();
