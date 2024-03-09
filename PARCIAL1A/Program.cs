@@ -1,6 +1,14 @@
+using Microsoft.EntityFrameworkCore;
+using PARCIAL1A.Models;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddDbContext<ParcialContext>(options =>
+options.UseSqlServer(
+    builder.Configuration.GetConnectionString("ParcialFrank")
+    )
+);
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
